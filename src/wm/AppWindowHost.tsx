@@ -23,6 +23,13 @@ import {
   TaskManagerApp,
 } from '@/apps/SystemApps';
 import {
+  ApiClientApp,
+  CyberArcadeApp,
+  DevToolboxApp,
+  KanbanApp,
+  PaintStudioApp,
+} from '@/apps/PowerApps';
+import {
   createControlledPluginApi,
   getVerifiedPluginById,
 } from '@/plugins/pluginManager';
@@ -84,6 +91,16 @@ export const AppWindowHost: React.FC<AppWindowHostProps> = ({ windowInstance }) 
       return <AppStoreApp />;
     case 'about-kubekos':
       return <AboutKubekOsApp />;
+    case 'kanban-board':
+      return <KanbanApp />;
+    case 'paint-studio':
+      return <PaintStudioApp />;
+    case 'api-client':
+      return <ApiClientApp />;
+    case 'dev-toolbox':
+      return <DevToolboxApp />;
+    case 'cyber-arcade':
+      return <CyberArcadeApp />;
     default: {
       // Check if it is an installed verified plugin
       const pluginPkg = getVerifiedPluginById(manifest.id);

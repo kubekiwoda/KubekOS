@@ -239,11 +239,18 @@ export type MotionQualityTier =
   | 'EXTREME'
   | 'REDUCED_MOTION';
 
+export type FontScaleTier = 'COMPACT' | 'DEFAULT' | 'LARGE';
+export type DockSizeTier = 'COMPACT' | 'NORMAL' | 'LARGE';
+
 export interface UserPreferences {
   userId: string;
   themeMode: ThemeMode;
   accentColor: AccentColorId;
   wallpaperId: WallpaperId;
+  customWallpaperUrl?: string;
+  fontScale: FontScaleTier;
+  dockSize: DockSizeTier;
+  windowOpacity: number; // 75 to 100
   motionQuality: MotionQualityTier;
   reducedMotion: boolean;
   glassBlurIntensity: 'LOW' | 'MEDIUM' | 'HIGH';

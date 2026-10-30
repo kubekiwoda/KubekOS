@@ -188,9 +188,12 @@ export const SettingsApp: React.FC<SettingsAppProps> = ({
                     key={wp.id}
                     type="button"
                     data-testid={`wallpaper-${wp.id}`}
-                    onClick={() => setWallpaper(wp.id)}
+                    onClick={() => {
+                      setWallpaper(wp.id);
+                      updatePreferences({ customWallpaperUrl: '' });
+                    }}
                     className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
-                      preferences.wallpaperId === wp.id
+                      preferences.wallpaperId === wp.id && !preferences.customWallpaperUrl
                         ? `${accent.borderClass} ring-2 ${accent.ringClass} bg-slate-900`
                         : 'border-slate-800 bg-slate-900/50 hover:bg-slate-900'
                     }`}
@@ -205,6 +208,90 @@ export const SettingsApp: React.FC<SettingsAppProps> = ({
                     </div>
                   </button>
                 ))}
+              </div>
+            </div>
+
+            {/* Custom Wallpaper URL & Advanced Shell Customization */}
+            <div className="p-4 rounded-xl bg-slate-900/70 border border-slate-800 space-y-4">
+              <div className="space-y-1.5">
+                <label className="font-medium text-white">
+                  Custom Wallpaper Image URL (HTTPS or Data URL)
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={preferences.customWallpaperUrl ?? ''}
+                    onChange={(e) =>
+                      updatePreferences({ customWallpaperUrl: e.target.value })
+                    }
+                    placeholder="https://images.unsplash.com/photo-..."
+                    className="flex-1 px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-white focus:outline-none"
+                  />
+                  {preferences.customWallpaperUrl && (
+                    <button
+                      type="button"
+                      onClick={() => updatePreferences({ customWallpaperUrl: '' })}
+                      className="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 cursor-pointer"
+                    >
+                      Reset
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-3 pt-2 border-t border-slate-800">
+                {/* Dock Size */}
+                <div className="space-y-1">
+                  <label className="text-[11px] text-slate-400">Floating Dock Size</label>
+                  <select
+                    value={preferences.dockSize}
+                    onChange={(e) =>
+                      updatePreferences({
+                        dockSize: e.target.value as 'COMPACT' | 'NORMAL' | 'LARGE',
+                      })
+                    }
+                    className="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-white"
+                  >
+                    <option value="COMPACT">Compact</option>
+                    <option value="NORMAL">Normal</option>
+                    <option value="LARGE">Large</option>
+                  </select>
+                </div>
+
+                {/* Glass Blur Intensity */}
+                <div className="space-y-1">
+                  <label className="text-[11px] text-slate-400">Glass Blur Intensity</label>
+                  <select
+                    value={preferences.glassBlurIntensity}
+                    onChange={(e) =>
+                      updatePreferences({
+                        glassBlurIntensity: e.target.value as 'LOW' | 'MEDIUM' | 'HIGH',
+                      })
+                    }
+                    className="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-white"
+                  >
+                    <option value="LOW">Low Blur</option>
+                    <option value="MEDIUM">Medium Blur</option>
+                    <option value="HIGH">Ultra Obsidian Blur</option>
+                  </select>
+                </div>
+
+                {/* Window Opacity */}
+                <div className="space-y-1">
+                  <label className="text-[11px] text-slate-400">
+                    Window Opacity ({preferences.windowOpacity}%)
+                  </label>
+                  <input
+                    type="range"
+                    min={75}
+                    max={100}
+                    value={preferences.windowOpacity}
+                    onChange={(e) =>
+                      updatePreferences({ windowOpacity: Number(e.target.value) })
+                    }
+                    className="w-full accent-cyan-400 cursor-pointer mt-2"
+                  />
+                </div>
               </div>
             </div>
 

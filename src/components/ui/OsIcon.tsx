@@ -7,6 +7,7 @@ import React from 'react';
 import {
   Activity,
   AppWindow,
+  Braces,
   Calculator,
   Calendar,
   Code2,
@@ -16,13 +17,17 @@ import {
   FileText,
   Folder,
   FolderOpen,
+  Gamepad2,
   Globe,
   HardDrive,
   Image as ImageIcon,
   Info,
+  Kanban,
   Layers,
   Music,
   Package,
+  Palette,
+  Send,
   Settings,
   Shield,
   Sparkles,
@@ -58,6 +63,11 @@ const ICON_MAP: Record<string, React.ComponentType<LucideProps>> = {
   shield: Shield,
   sparkles: Sparkles,
   window: AppWindow,
+  kanban: Kanban,
+  palette: Palette,
+  send: Send,
+  braces: Braces,
+  gamepad: Gamepad2,
 };
 
 export interface OsIconProps extends LucideProps {

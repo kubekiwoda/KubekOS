@@ -54,6 +54,9 @@ export const DesktopEnvironment: React.FC = () => {
 
   const wallpaper =
     WALLPAPER_PRESETS[preferences.wallpaperId] ?? WALLPAPER_PRESETS['nebula-dark'];
+  const customWallpaperBg = preferences.customWallpaperUrl?.trim()
+    ? `url("${preferences.customWallpaperUrl.trim()}") center/cover no-repeat`
+    : wallpaper.cssBackground;
   const accent = ACCENT_COLORS[preferences.accentColor] ?? ACCENT_COLORS.cyan;
   const motionPreset = getMotionPreset(
     preferences.motionQuality,
@@ -247,7 +250,7 @@ export const DesktopEnvironment: React.FC = () => {
           scale: motionPreset.enableParallax ? 1.04 : 1,
         }}
         transition={{ type: 'spring', stiffness: 120, damping: 25 }}
-        style={{ background: wallpaper.cssBackground }}
+        style={{ background: customWallpaperBg }}
         className="fixed inset-0 pointer-events-none obsidian-grid-overlay"
       />
 
