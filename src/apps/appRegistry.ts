@@ -1,0 +1,364 @@
+/**
+ * KubekOS Application Registry
+ * Defines manifests for all 14 built-in system applications and supports dynamic plugin registration.
+ */
+
+import { create } from 'zustand';
+import type { ApplicationManifest } from '@/types/os';
+import { kernelLogger } from '@/kernel/logger';
+
+export const BUILT_IN_MANIFESTS: ApplicationManifest[] = [
+  {
+    id: 'file-explorer',
+    name: 'File Explorer',
+    version: '1.0.0',
+    description: 'Browse, create, organize, search, and import/export files in /KubekOS.',
+    author: 'KubekOS Core Team',
+    category: 'SYSTEM',
+    icon: 'folder',
+    entryPoint: 'builtin://file-explorer',
+    permissions: ['vfs.read', 'vfs.write', 'notifications.send'],
+    windowConfig: {
+      defaultWidth: 880,
+      defaultHeight: 560,
+      minWidth: 520,
+      minHeight: 380,
+      isResizable: true,
+      allowMultipleInstances: true,
+    },
+    isBuiltIn: true,
+    pinnedByDefault: true,
+    desktopShortcutByDefault: true,
+  },
+  {
+    id: 'terminal',
+    name: 'Terminal',
+    version: '1.0.0',
+    description: 'Interactive shell integrated with the Virtual Filesystem and custom command registry.',
+    author: 'KubekOS Core Team',
+    category: 'DEVELOPMENT',
+    icon: 'terminal',
+    entryPoint: 'builtin://terminal',
+    permissions: ['vfs.read', 'vfs.write', 'system.metrics'],
+    windowConfig: {
+      defaultWidth: 760,
+      defaultHeight: 480,
+      minWidth: 460,
+      minHeight: 300,
+      isResizable: true,
+      allowMultipleInstances: true,
+    },
+    isBuiltIn: true,
+    pinnedByDefault: true,
+    desktopShortcutByDefault: true,
+  },
+  {
+    id: 'code-editor',
+    name: 'Code Studio',
+    version: '1.0.0',
+    description: 'Multi-tab code editor with syntax highlighting and direct VFS file persistence.',
+    author: 'KubekOS Core Team',
+    category: 'DEVELOPMENT',
+    icon: 'code',
+    entryPoint: 'builtin://code-editor',
+    permissions: ['vfs.read', 'vfs.write'],
+    windowConfig: {
+      defaultWidth: 920,
+      defaultHeight: 600,
+      minWidth: 560,
+      minHeight: 400,
+      isResizable: true,
+      allowMultipleInstances: false,
+    },
+    isBuiltIn: true,
+    pinnedByDefault: true,
+    desktopShortcutByDefault: true,
+  },
+  {
+    id: 'notes',
+    name: 'Notes',
+    version: '1.0.0',
+    description: 'Markdown-ready note-taking workspace with instant auto-save and full-text search.',
+    author: 'KubekOS Core Team',
+    category: 'PRODUCTIVITY',
+    icon: 'notes',
+    entryPoint: 'builtin://notes',
+    permissions: ['vfs.read', 'vfs.write'],
+    windowConfig: {
+      defaultWidth: 780,
+      defaultHeight: 520,
+      minWidth: 480,
+      minHeight: 340,
+      isResizable: true,
+      allowMultipleInstances: false,
+    },
+    isBuiltIn: true,
+    pinnedByDefault: true,
+    desktopShortcutByDefault: true,
+  },
+  {
+    id: 'browser',
+    name: 'Web Browser',
+    version: '1.0.0',
+    description: 'Multi-tab sandboxed browser with bookmarks, history, and safe external navigation.',
+    author: 'KubekOS Core Team',
+    category: 'INTERNET',
+    icon: 'globe',
+    entryPoint: 'builtin://browser',
+    permissions: ['network.external'],
+    windowConfig: {
+      defaultWidth: 940,
+      defaultHeight: 620,
+      minWidth: 540,
+      minHeight: 400,
+      isResizable: true,
+      allowMultipleInstances: true,
+    },
+    isBuiltIn: true,
+    pinnedByDefault: true,
+    desktopShortcutByDefault: true,
+  },
+  {
+    id: 'calculator',
+    name: 'Calculator',
+    version: '1.0.0',
+    description: 'Precision arithmetic calculator with keyboard input and calculation history tape.',
+    author: 'KubekOS Core Team',
+    category: 'UTILITIES',
+    icon: 'calculator',
+    entryPoint: 'builtin://calculator',
+    permissions: [],
+    windowConfig: {
+      defaultWidth: 360,
+      defaultHeight: 500,
+      minWidth: 320,
+      minHeight: 440,
+      isResizable: false,
+      allowMultipleInstances: false,
+    },
+    isBuiltIn: true,
+    pinnedByDefault: false,
+    desktopShortcutByDefault: false,
+  },
+  {
+    id: 'media-player',
+    name: 'Media Player',
+    version: '1.0.0',
+    description: 'Audio synthesizer and local audio file player with playlist and volume control.',
+    author: 'KubekOS Core Team',
+    category: 'MEDIA',
+    icon: 'music',
+    entryPoint: 'builtin://media-player',
+    permissions: ['vfs.read', 'audio.playback'],
+    windowConfig: {
+      defaultWidth: 680,
+      defaultHeight: 480,
+      minWidth: 480,
+      minHeight: 380,
+      isResizable: true,
+      allowMultipleInstances: false,
+    },
+    isBuiltIn: true,
+    pinnedByDefault: false,
+    desktopShortcutByDefault: false,
+  },
+  {
+    id: 'calendar',
+    name: 'Calendar',
+    version: '1.0.0',
+    description: 'Monthly schedule planner with persistent event creation and editing.',
+    author: 'KubekOS Core Team',
+    category: 'PRODUCTIVITY',
+    icon: 'calendar',
+    entryPoint: 'builtin://calendar',
+    permissions: ['vfs.read', 'vfs.write', 'notifications.send'],
+    windowConfig: {
+      defaultWidth: 820,
+      defaultHeight: 560,
+      minWidth: 580,
+      minHeight: 420,
+      isResizable: true,
+      allowMultipleInstances: false,
+    },
+    isBuiltIn: true,
+    pinnedByDefault: false,
+    desktopShortcutByDefault: false,
+  },
+  {
+    id: 'system-monitor',
+    name: 'System Monitor',
+    version: '1.0.0',
+    description: 'Real-time storage telemetry, running process counter, kernel logs, and browser metrics.',
+    author: 'KubekOS Core Team',
+    category: 'SYSTEM',
+    icon: 'activity',
+    entryPoint: 'builtin://system-monitor',
+    permissions: ['system.metrics', 'vfs.read'],
+    windowConfig: {
+      defaultWidth: 800,
+      defaultHeight: 540,
+      minWidth: 540,
+      minHeight: 380,
+      isResizable: true,
+      allowMultipleInstances: false,
+    },
+    isBuiltIn: true,
+    pinnedByDefault: true,
+    desktopShortcutByDefault: true,
+  },
+  {
+    id: 'task-manager',
+    name: 'Task Manager',
+    version: '1.0.0',
+    description: 'Inspect and terminate active application windows and background services.',
+    author: 'KubekOS Core Team',
+    category: 'SYSTEM',
+    icon: 'layers',
+    entryPoint: 'builtin://task-manager',
+    permissions: ['system.metrics'],
+    windowConfig: {
+      defaultWidth: 680,
+      defaultHeight: 460,
+      minWidth: 480,
+      minHeight: 340,
+      isResizable: true,
+      allowMultipleInstances: false,
+    },
+    isBuiltIn: true,
+    pinnedByDefault: false,
+    desktopShortcutByDefault: false,
+  },
+  {
+    id: 'image-viewer',
+    name: 'Image Viewer',
+    version: '1.0.0',
+    description: 'View SVG, PNG, and JPEG graphics stored in /KubekOS/Pictures with zoom and pan.',
+    author: 'KubekOS Core Team',
+    category: 'MEDIA',
+    icon: 'image',
+    entryPoint: 'builtin://image-viewer',
+    permissions: ['vfs.read'],
+    windowConfig: {
+      defaultWidth: 740,
+      defaultHeight: 520,
+      minWidth: 460,
+      minHeight: 340,
+      isResizable: true,
+      allowMultipleInstances: true,
+    },
+    isBuiltIn: true,
+    pinnedByDefault: false,
+    desktopShortcutByDefault: false,
+  },
+  {
+    id: 'app-store',
+    name: 'App Center',
+    version: '1.0.0',
+    description: 'Manage installed applications, inspect permissions, and install verified plugins.',
+    author: 'KubekOS Core Team',
+    category: 'SYSTEM',
+    icon: 'store',
+    entryPoint: 'builtin://app-store',
+    permissions: ['settings.read', 'settings.write'],
+    windowConfig: {
+      defaultWidth: 840,
+      defaultHeight: 560,
+      minWidth: 560,
+      minHeight: 400,
+      isResizable: true,
+      allowMultipleInstances: false,
+    },
+    isBuiltIn: true,
+    pinnedByDefault: false,
+    desktopShortcutByDefault: true,
+  },
+  {
+    id: 'settings',
+    name: 'Settings',
+    version: '1.0.0',
+    description: 'Personalize themes, wallpapers, accent colors, audio, user profiles, and storage.',
+    author: 'KubekOS Core Team',
+    category: 'SYSTEM',
+    icon: 'settings',
+    entryPoint: 'builtin://settings',
+    permissions: ['settings.read', 'settings.write', 'vfs.read'],
+    windowConfig: {
+      defaultWidth: 820,
+      defaultHeight: 560,
+      minWidth: 580,
+      minHeight: 420,
+      isResizable: true,
+      allowMultipleInstances: false,
+    },
+    isBuiltIn: true,
+    pinnedByDefault: true,
+    desktopShortcutByDefault: false,
+  },
+  {
+    id: 'about-kubekos',
+    name: 'About KubekOS',
+    version: '1.0.0',
+    description: 'System specification, architecture overview, and open-source software information.',
+    author: 'KubekOS Core Team',
+    category: 'SYSTEM',
+    icon: 'info',
+    entryPoint: 'builtin://about-kubekos',
+    permissions: ['system.metrics'],
+    windowConfig: {
+      defaultWidth: 540,
+      defaultHeight: 460,
+      minWidth: 440,
+      minHeight: 380,
+      isResizable: false,
+      allowMultipleInstances: false,
+    },
+    isBuiltIn: true,
+    pinnedByDefault: false,
+    desktopShortcutByDefault: true,
+  },
+];
+
+interface AppRegistryState {
+  manifests: Record<string, ApplicationManifest>;
+  registerPluginApp: (manifest: ApplicationManifest) => void;
+  unregisterPluginApp: (appId: string) => void;
+  getManifest: (appId: string) => ApplicationManifest | undefined;
+  getAllManifests: () => ApplicationManifest[];
+}
+
+const initialMap: Record<string, ApplicationManifest> = {};
+for (const manifest of BUILT_IN_MANIFESTS) {
+  initialMap[manifest.id] = manifest;
+}
+
+export const useAppRegistryStore = create<AppRegistryState>((set, get) => ({
+  manifests: initialMap,
+
+  registerPluginApp: (manifest) => {
+    set((state) => ({
+      manifests: {
+        ...state.manifests,
+        [manifest.id]: manifest,
+      },
+    }));
+    kernelLogger.info('PLUGIN_API', `Registered application manifest: ${manifest.name} (${manifest.id})`);
+  },
+
+  unregisterPluginApp: (appId) => {
+    const existing = get().manifests[appId];
+    if (!existing || existing.isBuiltIn) {
+      kernelLogger.warn('PLUGIN_API', `Cannot unregister built-in or non-existent app: ${appId}`);
+      return;
+    }
+    set((state) => {
+      const next = { ...state.manifests };
+      delete next[appId];
+      return { manifests: next };
+    });
+    kernelLogger.info('PLUGIN_API', `Unregistered plugin application: ${appId}`);
+  },
+
+  getManifest: (appId) => get().manifests[appId],
+
+  getAllManifests: () => Object.values(get().manifests),
+}));
