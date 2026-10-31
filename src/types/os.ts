@@ -182,7 +182,8 @@ export type AppCategory =
   | 'DEVELOPMENT'
   | 'MEDIA'
   | 'UTILITIES'
-  | 'INTERNET';
+  | 'INTERNET'
+  | 'GAMES';
 
 export interface AppWindowConfig {
   defaultWidth: number;

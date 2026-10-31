@@ -14,6 +14,7 @@ export default defineConfig({
   build: {
     target: 'es2022',
     sourcemap: false,
+    chunkSizeWarningLimit: 700,
     rollupOptions: {
       output: {
         manualChunks: {
@@ -21,6 +22,7 @@ export default defineConfig({
           'motion-vendor': ['framer-motion'],
           'storage-vendor': ['dexie'],
           'icons-vendor': ['lucide-react'],
+          'three-vendor': ['three'],
         },
       },
     },

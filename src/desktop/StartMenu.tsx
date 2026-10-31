@@ -24,6 +24,7 @@ import type { AppCategory } from '@/types/os';
 
 const CATEGORIES: { id: 'ALL' | AppCategory; label: string }[] = [
   { id: 'ALL', label: 'All Apps' },
+  { id: 'GAMES', label: 'Games' },
   { id: 'SYSTEM', label: 'System' },
   { id: 'DEVELOPMENT', label: 'Dev' },
   { id: 'PRODUCTIVITY', label: 'Productivity' },

@@ -95,6 +95,7 @@ export const DEFAULT_PREFERENCES: UserPreferences = {
     'notes',
     'kanban-board',
     'paint-studio',
+    'kubekcraft',
     'system-monitor',
     'settings',
   ],

@@ -1,8 +1,8 @@
-# KubekOS
+http://localhost:5173/# KubekOS
 
 **KubekOS** is a modular, browser-based operating system simulation engineered with a dark-first glassmorphic desktop interface, a multi-window compositor, an IndexedDB-backed Virtual Filesystem (`/KubekOS`), and a permission-isolated plugin runtime.
 
-> **Important Note:** KubekOS is a web-based operating system simulation running inside a browser sandbox, not a hardware operating system kernel.
+> **Important Note:** KubekOS is a web-based http://localhost:5173/operating system simulation running inside a browser sandbox, not a hardware operating system kernel.
 
 ---
 

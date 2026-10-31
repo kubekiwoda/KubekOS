@@ -44,4 +44,64 @@ test.describe('KubekOS End-to-End Desktop Flow', () => {
     await page.getByTestId('calc-btn-=').click();
     await expect(page.getByTestId('calculator-display')).toHaveText('12');
   });
+
+  test('launches KubekCraft from App Center, creates a 3D world, mines/places blocks, crafts, saves, and persists across refresh', async ({
+    page,
+  }) => {
+    await page.goto('/');
+
+    const loginScreen = page.getByTestId('login-screen');
+    await expect(loginScreen).toBeVisible({ timeout: 10000 });
+    await page.getByTestId('login-submit-button').click();
+    await expect(page.getByTestId('desktop-root')).toBeVisible();
+
+    // Open App Center from desktop icon and launch KubekCraft
+    await page.getByTestId('desktop-icon-app-store').dblclick();
+    await expect(page.getByTestId('window-app-store')).toBeVisible();
+    await page.getByTestId('app-store-open-kubekcraft').click();
+
+    await expect(page.getByTestId('window-kubekcraft')).toBeVisible();
+    await expect(page.getByTestId('kubekcraft-main-menu')).toBeVisible();
+
+    // Create a new world
+    await page.getByTestId('kubekcraft-menu-create-world').click();
+    await expect(page.getByTestId('kubekcraft-create-world-screen')).toBeVisible();
+    await page.getByTestId('kubekcraft-world-name-input').fill('Playwright Voxel World');
+    await page.getByTestId('kubekcraft-world-seed-input').fill('E2E-SEED-777');
+    await page.getByTestId('kubekcraft-confirm-create-world').click();
+
+    // Verify 3D viewport and HUD render
+    await expect(page.getByTestId('kubekcraft-3d-viewport')).toBeVisible({ timeout: 10000 });
+    await expect(page.getByTestId('kubekcraft-hotbar')).toBeVisible();
+    await expect(page.getByTestId('kubekcraft-coords')).toBeVisible();
+
+    // Mine and place blocks
+    await page.getByTestId('kubekcraft-mine-target-btn').click();
+    await page.getByTestId('kubekcraft-hotbar-slot-2').click();
+    await page.getByTestId('kubekcraft-place-target-btn').click();
+
+    // Open Inventory & Crafting modal
+    await page.getByTestId('kubekcraft-open-inventory-btn').click();
+    await expect(page.getByTestId('kubekcraft-inventory-modal')).toBeVisible();
+    await page.getByTestId('kubekcraft-close-inventory-btn').click();
+
+    // Save and quit to main menu
+    await page.getByTestId('kubekcraft-pause-btn').click();
+    await expect(page.getByTestId('kubekcraft-pause-overlay')).toBeVisible();
+    await page.getByTestId('kubekcraft-save-and-quit-btn').click();
+    await expect(page.getByTestId('kubekcraft-main-menu')).toBeVisible();
+
+    // Close KubekCraft window, reload browser, and verify world persists
+    await page.getByTestId('window-close-kubekcraft').click();
+    await page.reload();
+
+    await expect(page.getByTestId('login-screen')).toBeVisible({ timeout: 10000 });
+    await page.getByTestId('login-submit-button').click();
+    await page.getByTestId('taskbar-app-kubekcraft').click();
+
+    await expect(page.getByTestId('kubekcraft-main-menu')).toBeVisible();
+    await expect(page.getByTestId('kubekcraft-menu-quick-play')).toContainText(
+      'Playwright Voxel World'
+    );
+  });
 });

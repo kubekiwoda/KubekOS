@@ -7,6 +7,7 @@ import React from 'react';
 import {
   Activity,
   AppWindow,
+  Box,
   Braces,
   Calculator,
   Calendar,
@@ -27,6 +28,7 @@ import {
   Music,
   Package,
   Palette,
+  Pickaxe,
   Send,
   Settings,
   Shield,
@@ -68,6 +70,9 @@ const ICON_MAP: Record<string, React.ComponentType<LucideProps>> = {
   send: Send,
   braces: Braces,
   gamepad: Gamepad2,
+  box: Box,
+  kubekcraft: Box,
+  pickaxe: Pickaxe,
 };
 
 export interface OsIconProps extends LucideProps {

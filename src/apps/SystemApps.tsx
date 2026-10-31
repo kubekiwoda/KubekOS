@@ -411,6 +411,7 @@ export const AppStoreApp: React.FC = () => {
                 </div>
                 <button
                   type="button"
+                  data-testid={`app-store-open-${app.id}`}
                   onClick={() => openWindow(app.id)}
                   className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 cursor-pointer"
                 >

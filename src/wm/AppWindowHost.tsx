@@ -29,6 +29,7 @@ import {
   KanbanApp,
   PaintStudioApp,
 } from '@/apps/PowerApps';
+import { KubekCraftApp } from '@/apps/kubekcraft/KubekCraftApp';
 import {
   createControlledPluginApi,
   getVerifiedPluginById,
@@ -101,6 +102,8 @@ export const AppWindowHost: React.FC<AppWindowHostProps> = ({ windowInstance }) 
       return <DevToolboxApp />;
     case 'cyber-arcade':
       return <CyberArcadeApp />;
+    case 'kubekcraft':
+      return <KubekCraftApp windowId={windowInstance.id} />;
     default: {
       // Check if it is an installed verified plugin
       const pluginPkg = getVerifiedPluginById(manifest.id);
